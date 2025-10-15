@@ -1,0 +1,3 @@
+# Z.AI API Configuration Example
+# Copy this file to config.properties and replace YOUR_API_KEY_HERE with your actual Z.AI API key
+llm.z.api.key=YOUR_API_KEY_HERE
