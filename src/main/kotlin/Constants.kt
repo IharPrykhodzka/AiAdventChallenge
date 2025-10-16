@@ -4,7 +4,9 @@ import java.io.FileInputStream
 import java.io.IOException
 import java.util.Properties
 
-const val glmModel = "glm-4.6"
+const val glmModelSenior = "glm-4.6"
+const val glmModelMiddle = "glm-4.5"
+const val glmModelJunior = "glm-4.5-air"
 
 val llmZApi: String by lazy {
     loadApiKey()

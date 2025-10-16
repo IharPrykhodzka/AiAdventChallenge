@@ -1,6 +1,7 @@
 package ru.aiAdventChallenge
 
 import kotlinx.coroutines.runBlocking
+import ru.aiAdventChallenge.usecase.GetRockGroupsUseCase
 import java.util.Scanner
 
 fun main() = runBlocking {
@@ -21,6 +22,7 @@ fun main() = runBlocking {
         return@runBlocking
     }
     val client = ZAiClient(apiKey)
+    val getRockGroupsUseCase = GetRockGroupsUseCase(client)
 
     try {
         // Сразу отправляем приветственное сообщение - это также проверит работоспособность API
@@ -30,7 +32,7 @@ fun main() = runBlocking {
             println("Агент: печатает...")
             val welcomeResult = client.sendMessage(
                 message = "Привет! Представься и расскажи, чем ты можешь помочь. Отвечай на русском языке.",
-                systemMessage = "You are a helpful assistant. Answer user questions concisely in Russian."
+                systemMessage = "You are a helpful assistant. Answer user questions concisely in Russian. Write beautifully, hyphenating to a new line and highlighting important parameters. And not the whole text in one line."
             )
             println("Агент: ${formatAgentResponse(welcomeResult, true)}")
             println()
@@ -48,7 +50,7 @@ fun main() = runBlocking {
                     println("Ввод недоступен. Завершение работы.")
                     break
                 }
-                
+
                 val userInput = scanner.nextLine()
 
                 if (userInput.lowercase() in listOf("exit", "quit", "выход")) {
@@ -62,11 +64,23 @@ fun main() = runBlocking {
 
                 try {
                     println("Агент: печатает...")
-                    val result = client.sendMessage(
-                        message = userInput,
-                        systemMessage = "You are a helpful assistant. Answer user questions concisely in Russian."
-                    )
-                    println("Агент: ${formatAgentResponse(result, true)}")
+
+                    // Проверяем, является ли ввод командой "подробнее"
+                    if (userInput.lowercase() == "подробнее") {
+                        // Запрашиваем дополнительную информацию о рок-группах через usecase
+                        val rockGroupsResponse = getRockGroupsUseCase.execute("знаменитые рок-группы")
+
+                        // Выводим результат в красивом отформатированном виде
+                        println("Агент: Подробная информация о рок-группах:")
+                        println(formatRockGroupsResponse(rockGroupsResponse))
+                    } else {
+                        // Обычный режим общения
+                        val result = client.sendMessage(
+                            message = userInput,
+                            systemMessage = "You are a helpful assistant. Answer user questions concisely in Russian."
+                        )
+                        println("Агент: ${formatAgentResponse(result, true)}")
+                    }
                     println()
                     print("Вы: ")
                 } catch (e: Exception) {
