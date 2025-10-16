@@ -90,3 +90,22 @@ data class ZAiError(
 data class ZAiErrorResponse(
     val error: ZAiError
 )
+
+// Модели для ответа о музыкальных группах в формате JSON
+@Serializable
+data class RockGroup(
+    val name: String,
+    val foundedYear: Int,
+    val country: String,
+    val genre: String,
+    val famousAlbums: List<String>,
+    val members: List<String>,
+    val description: String
+)
+
+@Serializable
+data class RockGroupsResponse(
+    val groups: List<RockGroup>,
+    val totalCount: Int,
+    val query: String
+)

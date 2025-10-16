@@ -42,7 +42,7 @@ class ZAiClient(private val apiKey: String) {
             messages.add(ZAiMessage(role = "user", content = message))
 
             val request = ZAiRequest(
-                model = glmModel,
+                model = glmModelMiddle,
                 messages = messages
             )
 
