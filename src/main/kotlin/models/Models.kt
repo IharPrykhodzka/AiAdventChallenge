@@ -1,4 +1,4 @@
-package ru.aiAdventChallenge
+package ru.aiAdventChallenge.models
 
 import kotlinx.serialization.Serializable
 

@@ -1,9 +1,10 @@
 package ru.aiAdventChallenge
 
-import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.*
+import ru.aiAdventChallenge.models.RockGroup
+import ru.aiAdventChallenge.models.RockGroupsResponse
 
 class RockGroupTest {
 

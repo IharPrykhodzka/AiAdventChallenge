@@ -1,7 +1,9 @@
 package ru.aiAdventChallenge
 
 import kotlinx.coroutines.runBlocking
+import ru.aiAdventChallenge.usecase.CreatingRockBand
 import ru.aiAdventChallenge.usecase.GetRockGroupsUseCase
+import ru.aiAdventChallenge.usecase.WelcomePrompt
 import java.util.Scanner
 
 fun main() = runBlocking {
@@ -23,25 +25,12 @@ fun main() = runBlocking {
     }
     val client = ZAiClient(apiKey)
     val getRockGroupsUseCase = GetRockGroupsUseCase(client)
+    val creatingRockBand = CreatingRockBand(client)
 
     try {
         // Сразу отправляем приветственное сообщение - это также проверит работоспособность API
         println("Подключение к Z.AI API...")
-        try {
-            println("Вступительный момент: Привет! Представься и расскажи, чем ты можешь помочь. Отвечай на русском языке.")
-            println("Агент: печатает...")
-            val welcomeResult = client.sendMessage(
-                message = "Привет! Представься и расскажи, чем ты можешь помочь. Отвечай на русском языке.",
-                systemMessage = "You are a helpful assistant. Answer user questions concisely in Russian. Write beautifully, hyphenating to a new line and highlighting important parameters. And not the whole text in one line."
-            )
-            println("Агент: ${formatAgentResponse(welcomeResult, true)}")
-            println()
-            print("Вы: ")
-        } catch (e: Exception) {
-            println("Не удалось подключиться к API: ${e.message}")
-            println("Проверьте интернет-соединение и API ключ")
-            println()
-        }
+        WelcomePrompt(client).execute()
 
         // Интерактивный режим
         while (true) {
@@ -73,13 +62,29 @@ fun main() = runBlocking {
                         // Выводим результат в красивом отформатированном виде
                         println("Агент: Подробная информация о рок-группах:")
                         println(formatRockGroupsResponse(rockGroupsResponse))
+                    } else if (userInput.lowercase() == "сброс" || userInput.lowercase() == "reset") {
+                        // Команда для сброса сессии создания рок-группы
+                        creatingRockBand.resetSession()
+                        println("Агент: Сессия создания рок-группы сброшена. Можем начать заново.")
                     } else {
-                        // Обычный режим общения
-                        val result = client.sendMessage(
-                            message = userInput,
-                            systemMessage = "You are a helpful assistant. Answer user questions concisely in Russian."
-                        )
-                        println("Агент: ${formatAgentResponse(result, true)}")
+                        // Режим создания рок-группы
+                        val response = creatingRockBand.execute(userInput)
+                        
+                        if (response.isNotEmpty()) {
+                            println("Агент: $response")
+                            
+                            // Если сессия неактивна, но ответ был получен,
+                            // значит это был не запрос на создание рок-группы
+                            if (!creatingRockBand.isSessionActive() &&
+                                !userInput.lowercase().contains("рок групп") &&
+                                !userInput.lowercase().contains("создать рок") &&
+                                !userInput.lowercase().contains("рок-групп") &&
+                                !userInput.lowercase().contains("музыкальную групп") &&
+                                !userInput.lowercase().contains("собрать групп")) {
+                                // Это был обычный запрос, не связанный с созданием рок-группы
+                                println("Агент: Я могу помочь вам создать рок-группу. Расскажите о своих желаниях!")
+                            }
+                        }
                     }
                     println()
                     print("Вы: ")

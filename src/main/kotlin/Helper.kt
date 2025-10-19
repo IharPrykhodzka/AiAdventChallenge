@@ -1,5 +1,7 @@
 package ru.aiAdventChallenge
 
+import ru.aiAdventChallenge.models.RockGroupsResponse
+
 /**
  * Форматирует ответ от агента для гармоничного вывода в консоли
  * @param response - исходный ответ от агента

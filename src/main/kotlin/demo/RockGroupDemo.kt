@@ -2,7 +2,7 @@ package ru.aiAdventChallenge.demo
 
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
-import ru.aiAdventChallenge.RockGroupsResponse
+import ru.aiAdventChallenge.models.RockGroupsResponse
 import ru.aiAdventChallenge.ZAiClient
 import ru.aiAdventChallenge.llmZApi
 import ru.aiAdventChallenge.usecase.GetRockGroupsUseCase

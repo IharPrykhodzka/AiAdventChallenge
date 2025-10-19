@@ -9,6 +9,10 @@ import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
+import ru.aiAdventChallenge.models.ZAiErrorResponse
+import ru.aiAdventChallenge.models.ZAiMessage
+import ru.aiAdventChallenge.models.ZAiRequest
+import ru.aiAdventChallenge.models.ZAiResponse
 
 class ZAiClient(private val apiKey: String) {
     private val client = HttpClient {

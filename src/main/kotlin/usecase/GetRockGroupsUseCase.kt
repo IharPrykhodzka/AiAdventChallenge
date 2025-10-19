@@ -1,7 +1,7 @@
 package ru.aiAdventChallenge.usecase
 
 import kotlinx.serialization.json.Json
-import ru.aiAdventChallenge.RockGroupsResponse
+import ru.aiAdventChallenge.models.RockGroupsResponse
 import ru.aiAdventChallenge.ZAiClient
 
 /**
