@@ -24,15 +24,18 @@ class WelcomePrompt(private val aiClient: ZAiClient) {
         }
     }
 
-    suspend fun standardMode(query: String): String {
+    suspend fun standardMode(query: String, temperature: Double = 1.0): String {
         try {
-            return aiClient.sendMessage(
+            val response = aiClient.sendMessage(
                 message = query,
                 systemMessage = "You are a helpful assistant. Answer user questions concisely in Russian. " +
                         "Write beautifully, hyphenating to a new line and highlighting important parameters. " +
-                        "And not the whole text in one line."
+                        "And not the whole text in one line.",
+                temperature = temperature
             )
+            return response
         } catch (e: Exception) {
+            println("StandardMode с температурой $temperature: ${e.message}")
             println("Не удалось подключиться к API: ${e.message}")
             println("Проверьте интернет-соединение и API ключ")
             println()

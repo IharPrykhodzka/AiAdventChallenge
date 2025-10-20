@@ -30,7 +30,7 @@ fun main() = runBlocking {
     try {
         // Сразу отправляем приветственное сообщение - это также проверит работоспособность API
         println("Подключение к Z.AI API...")
-        WelcomePrompt(client).execute()
+        val welcomePrompt = WelcomePrompt(client).apply { execute() }
 
         // Интерактивный режим
         while (true) {
@@ -66,13 +66,18 @@ fun main() = runBlocking {
                         // Команда для сброса сессии создания рок-группы
                         creatingRockBand.resetSession()
                         println("Агент: Сессия создания рок-группы сброшена. Можем начать заново.")
-                    } else {
+                    } else if (userInput.lowercase().contains("рок групп") &&
+                        userInput.lowercase().contains("создать рок") &&
+                        userInput.lowercase().contains("рок-групп") &&
+                        !userInput.lowercase().contains("музыкальную групп") &&
+                        userInput.lowercase().contains("собрать групп")
+                    ) {
                         // Режим создания рок-группы
                         val response = creatingRockBand.execute(userInput)
-                        
+
                         if (response.isNotEmpty()) {
                             println("Агент: $response")
-                            
+
                             // Если сессия неактивна, но ответ был получен,
                             // значит это был не запрос на создание рок-группы
                             if (!creatingRockBand.isSessionActive() &&
@@ -80,11 +85,50 @@ fun main() = runBlocking {
                                 !userInput.lowercase().contains("создать рок") &&
                                 !userInput.lowercase().contains("рок-групп") &&
                                 !userInput.lowercase().contains("музыкальную групп") &&
-                                !userInput.lowercase().contains("собрать групп")) {
+                                !userInput.lowercase().contains("собрать групп")
+                            ) {
                                 // Это был обычный запрос, не связанный с созданием рок-группы
                                 println("Агент: Я могу помочь вам создать рок-группу. Расскажите о своих желаниях!")
                             }
                         }
+                    } else {
+                        println("Тест на ответ с разной степеней температуры у модели:")
+                        
+                        println("Отправка запроса с температурой 0.0...")
+                        val response0 = welcomePrompt.standardMode(query = userInput, temperature = 0.0)
+                        if (response0.isNotEmpty()) {
+                            println("${formatAgentResponse(response0, true)}")
+                        } else {
+                            println("Ошибка: не получен ответ с температурой 0.0")
+                        }
+                        println()
+                        
+                        println("Отправка запроса с температурой 0.7...")
+                        val response07 = welcomePrompt.standardMode(query = userInput, temperature = 0.7)
+                        if (response07.isNotEmpty()) {
+                            println("${formatAgentResponse(response07, true)}")
+                        } else {
+                            println("Ошибка: не получен ответ с температурой 0.7")
+                        }
+                        println()
+                        
+                        println("Отправка запроса с температурой 1.0...")
+                        val response1 = welcomePrompt.standardMode(query = userInput, temperature = 1.0)
+                        if (response1.isNotEmpty()) {
+                            println("${formatAgentResponse(response1, true)}")
+                        } else {
+                            println("Ошибка: не получен ответ с температурой 1.0")
+                        }
+                        println()
+
+                        println("Отправка запроса с температурой 1.2...")
+                        val response12 = welcomePrompt.standardMode(query = userInput, temperature = 1.2)
+                        if (response12.isNotEmpty()) {
+                            println("${formatAgentResponse(response12, true)}")
+                        } else {
+                            println("Ошибка: не получен ответ с температурой 1.2")
+                        }
+                        println()
                     }
                     println()
                     print("Вы: ")

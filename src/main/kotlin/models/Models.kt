@@ -12,8 +12,9 @@ data class ZAiMessage(
 data class ZAiRequest(
     val model: String,
     val messages: List<ZAiMessage>,
-    val temperature: Int = 1,
+    val temperature: Double = 1.0,
     val max_tokens: Int = 65536,
+    val thinking: String = "enabled",
     val stream: Boolean = false
 )
 

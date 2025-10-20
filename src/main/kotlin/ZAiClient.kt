@@ -33,7 +33,7 @@ class ZAiClient(private val apiKey: String) {
 
     private val json = Json { ignoreUnknownKeys = true }
 
-    suspend fun sendMessage(message: String, systemMessage: String? = null): String {
+    suspend fun sendMessage(message: String, systemMessage: String? = null, temperature: Double = 1.0): String {
         try {
             val messages = mutableListOf<ZAiMessage>()
 
@@ -47,7 +47,8 @@ class ZAiClient(private val apiKey: String) {
 
             val request = ZAiRequest(
                 model = glmModelMiddle,
-                messages = messages
+                messages = messages,
+                temperature = temperature
             )
 
             // Для отладки выведем запрос
